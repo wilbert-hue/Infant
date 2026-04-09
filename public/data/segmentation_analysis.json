@@ -1,28 +1,142 @@
 {
   "Global": {
-    "By Type": {
-      "Sub-Normothermic Perfusion (20–34°C)": {},
-      "Warm or Normothermic Perfusion (35–37°C)": {}
+    "By Product Type": {
+      "Conventional Standard Infant Formula": {
+        "By Protein System (Conventional)": {
+          "Whey-dominant formula": {},
+          "Whey-casein blend formula": {},
+          "Casein-adjusted formula": {},
+          "Demineralised whey-based formula": {}
+        },
+        "By Lipid System (Conventional)": {
+          "DHA-fortified formula": {},
+          "DHA + ARA fortified formula": {},
+          "Fish oil-derived DHA formula": {},
+          "Algal DHA formula": {},
+          "Algal DHA + fungal ARA formula": {}
+        },
+        "By Functional Ingredient Enrichment (Conventional)": {
+          "Formula with probiotics": {},
+          "Formula with prebiotics": {},
+          "Formula with HMOs": {},
+          "Formula with synbiotics": {},
+          "Formula with combined functional ingredients": {}
+        }
+      },
+      "Organic / Clean-Label Standard Infant Formula": {
+        "By Protein System (Organic)": {
+          "Organic whey-based formula": {},
+          "Organic whey-casein blend formula": {},
+          "Organic demineralised whey-based formula": {}
+        },
+        "By Lipid System (Organic)": {
+          "Organic DHA-fortified formula": {},
+          "Organic DHA + ARA fortified formula": {},
+          "Organic algal DHA formula": {}
+        },
+        "By Functional Ingredient Enrichment (Organic)": {
+          "Organic formula with probiotics": {},
+          "Organic formula with prebiotics": {},
+          "Organic formula with HMOs": {},
+          "Organic formula with synbiotics": {},
+          "Organic formula with combined functional ingredients": {}
+        }
+      },
+      "Plant-Based Standard Infant Formula": {
+        "By Protein System (Plant-Based)": {
+          "Soy-based formula": {},
+          "Soy protein isolate-based formula": {},
+          "Rice-based formula": {},
+          "Other plant protein-based formula": {}
+        },
+        "By Lipid System (Plant-Based)": {
+          "Plant-based formula with algal DHA": {},
+          "Plant-based formula with DHA + ARA alternatives": {},
+          "Vegan omega-fortified formula": {}
+        },
+        "By Functional Ingredient Enrichment (Plant-Based)": {
+          "Plant-based formula with probiotics": {},
+          "Plant-based formula with prebiotics": {},
+          "Plant-based formula with HMOs": {},
+          "Plant-based formula with synbiotics": {},
+          "Plant-based formula with combined functional ingredients": {}
+        }
+      },
+      "Comfort / Partially Hydrolysed Standard Infant Formula": {
+        "By Protein System (Comfort)": {
+          "Partially hydrolysed whey protein formula": {},
+          "Partially hydrolysed whey-dominant blend formula": {}
+        },
+        "By Lipid System (Comfort)": {
+          "Comfort formula with DHA": {},
+          "Comfort formula with DHA + ARA": {},
+          "Comfort formula with algal DHA": {}
+        },
+        "By Functional Ingredient Enrichment (Comfort)": {
+          "Comfort formula with probiotics": {},
+          "Comfort formula with prebiotics": {},
+          "Comfort formula with HMOs": {},
+          "Comfort formula with synbiotics": {},
+          "Comfort formula with combined digestive-support ingredients": {}
+        }
+      }
     },
-    "By Organ Type": {
-      "Liver": {},
-      "Heart": {},
-      "Lung": {},
-      "Kidney": {},
-      "Others (Pancreas, Small bowel / Intestine, Composite Tissues / Limb Perfusion (emerging use cases))": {}
+    "By Ingredient Category": {
+      "Proteins": {
+        "Whey protein": {},
+        "Whey protein isolate": {},
+        "Casein": {},
+        "Demineralised whey": {},
+        "Partially hydrolysed whey protein": {},
+        "Soy protein": {},
+        "Rice protein": {},
+        "Other plant proteins": {}
+      },
+      "Lipids": {
+        "DHA": {},
+        "ARA": {},
+        "DHA + ARA blends": {}
+      },
+      "Probiotics": {
+        "Bifidobacterium species": {},
+        "Lactobacillus species": {},
+        "Other probiotic species": {}
+      },
+      "Prebiotics": {
+        "GOS": {},
+        "FOS": {},
+        "Inulin": {},
+        "GOS/FOS blends": {},
+        "Other prebiotic fibres": {}
+      },
+      "HMOs": {
+        "2'FL": {},
+        "LnNT": {},
+        "2'FL + LnNT blends": {},
+        "Other single HMOs": {},
+        "Multi-HMO systems": {}
+      }
     },
-    "Application / Use Case": {
-      "Organ Preservation": {},
-      "Viability Assessment": {},
-      "Physiologic Transport": {},
-      "Reconditioning Marginal Organs": {},
-      "Others (Research Use / Protocol development)": {}
+    "By Feeding Stage": {
+      "Stage 1 / First Infant Formula (0\u20136 months)": {},
+      "Stage 2 / Follow-On Formula (6\u201312 months)": {},
+      "Stage 3 / Toddler Formula / Growing-Up Milk (12\u201336 months)": {}
     },
-    "By End User": {
-      "Hospitals & Clinics": {},
-      "Specialty Clinic/Centers": {},
-      "Transplant Centers": {},
-      "Others (Research Institutes/Centers, Organ Procurement Organizations, etc.)": {}
+    "By Functional Enrichment Profile": {
+      "Core nutrition formula": {},
+      "Probiotic-enriched formula": {},
+      "Prebiotic-enriched formula": {},
+      "HMO-enriched formula": {},
+      "Synbiotic formula": {},
+      "Advanced functional formula": {}
+    },
+    "By Distribution Channel": {
+      "Hospital / Institutional": {},
+      "Pharmacy / Drug Store": {},
+      "Supermarket / Hypermarket": {},
+      "Specialty Baby Stores": {},
+      "E-Commerce / Online Retail": {},
+      "Direct-to-Consumer": {}
     },
     "By Region": {
       "North America": {
@@ -30,33 +144,31 @@
         "Canada": {}
       },
       "Europe": {
-        "U.K.": {},
         "Germany": {},
-        "Italy": {},
         "France": {},
+        "UK": {},
+        "Italy": {},
         "Spain": {},
-        "Russia": {},
-        "Rest of Europe": {}
+        "Rest of Western Europe": {},
+        "Eastern Europe": {}
       },
       "Asia Pacific": {
         "China": {},
-        "India": {},
+        "Vietnam": {},
+        "Singapore": {},
         "Japan": {},
         "South Korea": {},
-        "ASEAN": {},
-        "Australia": {},
+        "Thailand": {},
+        "Indonesia": {},
+        "Malaysia": {},
+        "India": {},
+        "Pakistan": {},
         "Rest of Asia Pacific": {}
       },
       "Latin America": {
         "Brazil": {},
-        "Argentina": {},
         "Mexico": {},
         "Rest of Latin America": {}
-      },
-      "Middle East & Africa": {
-        "GCC": {},
-        "South Africa": {},
-        "Rest of Middle East & Africa": {}
       }
     }
   }

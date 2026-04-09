@@ -1233,7 +1233,7 @@ export async function processJsonDataAsync(
     }
     const startYear = Math.min(...allYears)
     const forecastYear = Math.max(...allYears)
-    const baseYear = startYear + 5 // Base year = 2026 for 2021-2033 data
+    const baseYear = startYear + 6 // Base year = 2026 for 2020-2036 data
     // Historical/Forecast split: years before base year are historical
     const historicalEndYear = baseYear - 1 // 2025
     console.log(`Years: ${startYear} to ${forecastYear}, base: ${baseYear}, historical end: ${historicalEndYear}`)
@@ -1472,9 +1472,9 @@ export async function processJsonDataAsync(
     
     // Build metadata
     const metadata: Metadata = {
-      market_name: 'Normothermic Machine Perfusion Market',
+      market_name: 'Standard Infant Formula Industry Analysis  Market',
       market_type: 'Market Analysis',
-      industry: 'Healthcare & Pharmaceuticals',
+      industry: 'Food & Nutrition',
       years: allYears,
       start_year: startYear,
       base_year: baseYear,
