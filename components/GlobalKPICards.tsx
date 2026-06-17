@@ -3,7 +3,7 @@
 import { useMemo } from 'react'
 import { useDashboardStore } from '@/lib/store'
 import { TrendingUp, DollarSign, Calendar, Activity } from 'lucide-react'
-import { formatIndianNumber, formatIndianNumberWithCommas, formatCurrencyValue } from '@/lib/utils'
+import { EUR_RATE } from '@/lib/utils'
 
 export function GlobalKPICards() {
   const { data, filters, currency } = useDashboardStore()
@@ -126,20 +126,21 @@ export function GlobalKPICards() {
       : 0
 
     // Get currency preference
-    const selectedCurrency = currency || data.metadata.currency || 'USD'
-    const isINR = selectedCurrency === 'INR'
-    
+    const selectedCurrency = (currency as 'USD' | 'EUR') || 'USD'
+    const isEUR = selectedCurrency === 'EUR'
+    const conversionFactor = isEUR ? EUR_RATE : 1.0
+    const currencySymbol = isEUR ? '€' : '$'
+
     // Values in time_series are already in the unit specified by value_unit/volume_unit
-    // For example, if value_unit is "Million", values are already in millions (e.g., 811.6 means $811.6 Million)
-    // No conversion is needed - just display the values with the appropriate unit label
+    // Apply EUR conversion factor when EUR is selected
     const unit = filters.dataType === 'value'
       ? (data.metadata.value_unit || 'Million')
       : (data.metadata.volume_unit || 'Units')
 
-    // Display values as-is (they're already in the correct unit)
-    const marketSizeStartDisplay = marketSizeStart
-    const marketSizeEndDisplay = marketSizeEnd
-    const absoluteGrowthDisplay = absoluteGrowth
+    // Apply conversion factor for display
+    const marketSizeStartDisplay = marketSizeStart * conversionFactor
+    const marketSizeEndDisplay = marketSizeEnd * conversionFactor
+    const absoluteGrowthDisplay = absoluteGrowth * conversionFactor
 
     // Build descriptive labels
     // Note: selectedGeographies might be empty if we fell back to showing all geographies
@@ -165,12 +166,13 @@ export function GlobalKPICards() {
       absoluteGrowth: absoluteGrowthDisplay,
       growthPercentage,
       currency: selectedCurrency,
-      unit: isINR ? '' : (unit || 'Million'),
+      currencySymbol,
+      unit: unit || 'Million',
       dataTypeLabel,
       geographyLabel,
       segmentTypeLabel,
       dataType: filters.dataType,
-      isINR
+      isEUR
     }
   }, [data, filters, currency])
 
@@ -198,8 +200,8 @@ export function GlobalKPICards() {
           {/* Market Size - Start Year */}
           <div className="flex items-center gap-2">
             <div className="p-1.5 bg-blue-100 rounded">
-              {kpiData.currency === 'INR' ? (
-                <span className="text-blue-600 font-bold text-lg">₹</span>
+              {kpiData.isEUR ? (
+                <span className="text-blue-600 font-bold text-lg">€</span>
               ) : (
                 <DollarSign className="h-4 w-4 text-blue-600" />
               )}
@@ -209,10 +211,8 @@ export function GlobalKPICards() {
                 {kpiData.dataTypeLabel} {kpiData.startYear}
               </p>
               <p className="text-base font-bold text-black leading-tight">
-                {kpiData.dataType === 'value' && kpiData.isINR
-                  ? `₹ ${formatIndianNumber(kpiData.marketSizeStart)}`
-                  : kpiData.dataType === 'value'
-                  ? `$ ${kpiData.marketSizeStart.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} ${kpiData.unit}`
+                {kpiData.dataType === 'value'
+                  ? `${kpiData.currencySymbol} ${kpiData.marketSizeStart.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} ${kpiData.unit}`
                   : `${kpiData.marketSizeStart.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} ${kpiData.unit}`}
               </p>
             </div>
@@ -228,10 +228,8 @@ export function GlobalKPICards() {
                 {kpiData.dataTypeLabel} {kpiData.endYear}
               </p>
               <p className="text-base font-bold text-black leading-tight">
-                {kpiData.dataType === 'value' && kpiData.isINR
-                  ? `₹ ${formatIndianNumber(kpiData.marketSizeEnd)}`
-                  : kpiData.dataType === 'value'
-                  ? `$ ${kpiData.marketSizeEnd.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} ${kpiData.unit}`
+                {kpiData.dataType === 'value'
+                  ? `${kpiData.currencySymbol} ${kpiData.marketSizeEnd.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} ${kpiData.unit}`
                   : `${kpiData.marketSizeEnd.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} ${kpiData.unit}`}
               </p>
             </div>
@@ -262,10 +260,8 @@ export function GlobalKPICards() {
                 Absolute Growth ({kpiData.startYear}-{kpiData.endYear})
               </p>
               <p className="text-base font-bold text-black leading-tight">
-                {kpiData.dataType === 'value' && kpiData.isINR
-                  ? `₹ ${formatIndianNumber(kpiData.absoluteGrowth)}`
-                  : kpiData.dataType === 'value'
-                  ? `$ ${kpiData.absoluteGrowth.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} ${kpiData.unit}`
+                {kpiData.dataType === 'value'
+                  ? `${kpiData.currencySymbol} ${kpiData.absoluteGrowth.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} ${kpiData.unit}`
                   : `${kpiData.absoluteGrowth.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} ${kpiData.unit}`}
               </p>
               <p className="text-[10px] text-gray-600 mt-0.5">

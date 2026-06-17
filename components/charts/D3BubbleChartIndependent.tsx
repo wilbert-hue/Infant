@@ -1513,15 +1513,14 @@ export function D3BubbleChartIndependent({ title, height = 500 }: BubbleChartPro
     )
   }
 
-  const selectedCurrency = currency || data.metadata.currency || 'USD'
-  const isINR = selectedCurrency === 'INR'
-  const currencySymbol = isINR ? '₹' : '$'
-  const unitText = isINR ? '' : (data.metadata.value_unit || 'Million')
-  
+  const selectedCurrency = (currency as 'USD' | 'EUR') || 'USD'
+  const isEUR = selectedCurrency === 'EUR'
+  const currencySymbol = isEUR ? '€' : '$'
+  const currencyCode = isEUR ? 'EUR' : 'USD'
+  const unitText = data.metadata.value_unit || 'Million'
+
   const unit = filters.dataType === 'value'
-    ? isINR 
-      ? currencySymbol
-      : `${selectedCurrency} ${unitText}`
+    ? `${currencyCode} ${unitText}`
     : data.metadata.volume_unit
 
   return (
@@ -1580,32 +1579,32 @@ export function D3BubbleChartIndependent({ title, height = 500 }: BubbleChartPro
           </div>
         </div>
         
-        {/* Data Type - Only for opportunity mode */}
+        {/* Currency - Only for opportunity mode */}
         {isOpportunityMode && (
           <div>
             <label className="block text-sm font-medium text-black mb-2">
-              Data Type
+              Currency
             </label>
             <div className="flex gap-2">
               <button
-                onClick={() => updateActiveFilters({ dataType: 'value' })}
+                onClick={() => useDashboardStore.getState().setCurrency('USD')}
                 className={`flex-1 px-3 py-2 text-sm rounded-md transition-colors ${
-                  activeFilters.dataType === 'value'
+                  currency === 'USD'
                     ? 'bg-blue-600 text-white'
                     : 'bg-gray-100 text-black hover:bg-gray-200'
                 }`}
               >
-                Value
+                USD
               </button>
               <button
-                onClick={() => updateActiveFilters({ dataType: 'volume' })}
+                onClick={() => useDashboardStore.getState().setCurrency('EUR')}
                 className={`flex-1 px-3 py-2 text-sm rounded-md transition-colors ${
-                  activeFilters.dataType === 'volume'
+                  currency === 'EUR'
                     ? 'bg-blue-600 text-white'
                     : 'bg-gray-100 text-black hover:bg-gray-200'
                 }`}
               >
-                Volume
+                Euro
               </button>
             </div>
           </div>
@@ -1790,9 +1789,9 @@ export function D3BubbleChartIndependent({ title, height = 500 }: BubbleChartPro
                   <span className="text-sm text-black">Market Size ({data?.metadata?.forecast_year || 2031}):</span>
                   <div className="text-right">
                     <span className="text-sm font-semibold text-black">
-                      {tooltipData.currentValue.toLocaleString(undefined, { 
-                        minimumFractionDigits: 2, 
-                        maximumFractionDigits: 2 
+                      {(tooltipData.currentValue * (isEUR ? 0.92 : 1)).toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
                       })}
                     </span>
                     <span className="text-xs text-black ml-1">{unit}</span>
@@ -1818,9 +1817,9 @@ export function D3BubbleChartIndependent({ title, height = 500 }: BubbleChartPro
                     tooltipData.absoluteGrowth > 0 ? 'text-green-600' : tooltipData.absoluteGrowth < 0 ? 'text-red-600' : 'text-black'
                   }`}>
                     {tooltipData.absoluteGrowth > 0 ? '+' : ''}
-                    {tooltipData.absoluteGrowth.toLocaleString(undefined, { 
-                      minimumFractionDigits: 2, 
-                      maximumFractionDigits: 2 
+                    {(tooltipData.absoluteGrowth * (isEUR ? 0.92 : 1)).toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2
                     })} {unit}
                   </span>
                 </div>

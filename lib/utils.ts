@@ -13,17 +13,22 @@ export function formatCurrency(value: number, currency: string = 'USD', unit: st
   return `${currency} ${value.toFixed(2)} ${unit}`
 }
 
+// EUR conversion rate (1 USD = EUR_RATE EUR)
+export const EUR_RATE = 0.92
+
 // Get currency symbol based on currency preference
-export function getCurrencySymbol(currency: 'USD' | 'INR'): string {
-  return currency === 'INR' ? '₹' : '$'
+export function getCurrencySymbol(currency: 'USD' | 'EUR'): string {
+  return currency === 'EUR' ? '€' : '$'
 }
 
 // Format unit based on currency preference
-export function formatUnit(unit: string, currency: 'USD' | 'INR'): string {
-  if (currency === 'INR') {
-    return unit.replace('USD Million', '').replace('USD', '').replace('Million', '').trim()
-  }
+export function formatUnit(unit: string, currency: 'USD' | 'EUR'): string {
   return unit
+}
+
+// Apply currency conversion factor
+export function getCurrencyConversionFactor(currency: 'USD' | 'EUR'): number {
+  return currency === 'EUR' ? EUR_RATE : 1.0
 }
 
 // Format number according to Indian number system (lakhs, crores)
@@ -63,25 +68,12 @@ export function formatIndianNumberWithCommas(value: number, decimals: number = 2
 }
 
 // Format currency value based on currency preference
-export function formatCurrencyValue(value: number, currency: 'USD' | 'INR', showUnit: boolean = true): string {
-  if (currency === 'INR') {
-    const symbol = '₹'
-    // For INR, use Indian number system without "Million"
-    if (value >= 10000000) {
-      return `${symbol} ${formatIndianNumber(value)}${showUnit ? '' : ''}`
-    } else if (value >= 100000) {
-      return `${symbol} ${formatIndianNumber(value)}${showUnit ? '' : ''}`
-    } else {
-      return `${symbol} ${formatIndianNumberWithCommas(value)}`
-    }
-  } else {
-    // USD: use standard formatting with Million
-    const symbol = '$'
-    if (value >= 1000000) {
-      return `${symbol} ${(value / 1000000).toFixed(2)} Million`
-    }
-    return `${symbol} ${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+export function formatCurrencyValue(value: number, currency: 'USD' | 'EUR', showUnit: boolean = true): string {
+  const symbol = currency === 'EUR' ? '€' : '$'
+  if (value >= 1000000) {
+    return `${symbol} ${(value / 1000000).toFixed(2)} Million`
   }
+  return `${symbol} ${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
 export function formatPercentage(value: number, decimals: number = 2): string {

@@ -14,6 +14,7 @@ import {
 import { CHART_THEME, getChartColor } from '@/lib/chart-theme'
 import { filterData, prepareLineChartData, prepareIntelligentMultiLevelData, getUniqueGeographies, getUniqueSegments, getGeographyProportions } from '@/lib/data-processor'
 import { useDashboardStore } from '@/lib/store'
+import { EUR_RATE } from '@/lib/utils'
 
 interface MultiLineChartProps {
   title?: string
@@ -128,8 +129,20 @@ export function MultiLineChart({ title, height = 400 }: MultiLineChartProps) {
       effectiveAggregationLevel
     })
 
-    return { data: prepared, series }
-  }, [data, filters])
+    // Apply EUR conversion to chart data values
+    const conversionFactor = currency === 'EUR' ? EUR_RATE : 1.0
+    const convertedData = conversionFactor !== 1.0
+      ? prepared.map(dp => {
+          const converted: any = { year: dp.year }
+          Object.keys(dp).forEach(k => {
+            if (k !== 'year') converted[k] = (dp[k] as number) * conversionFactor
+          })
+          return converted
+        })
+      : prepared
+
+    return { data: convertedData, series }
+  }, [data, filters, currency])
 
   if (!data || chartData.data.length === 0) {
     return (
@@ -144,15 +157,13 @@ export function MultiLineChart({ title, height = 400 }: MultiLineChartProps) {
     )
   }
 
-  const selectedCurrency = currency || data.metadata.currency || 'USD'
-  const isINR = selectedCurrency === 'INR'
-  const currencySymbol = isINR ? '₹' : '$'
-  const unitLabel = isINR ? '' : (data.metadata.value_unit || 'Million')
-  
+  const selectedCurrency = (currency as 'USD' | 'EUR') || 'USD'
+  const isEUR = selectedCurrency === 'EUR'
+  const currencyCode = isEUR ? 'EUR' : 'USD'
+  const unitLabel = data.metadata.value_unit || 'Million'
+
   const yAxisLabel = filters.dataType === 'value'
-    ? isINR 
-      ? `Market Value (${currencySymbol})`
-      : `Market Value (${selectedCurrency} ${unitLabel})`
+    ? `Market Value (${currencyCode} ${unitLabel})`
     : `Market Volume (${data.metadata.volume_unit})`
 
   // Matrix view should use heatmap instead
@@ -198,15 +209,12 @@ export function MultiLineChart({ title, height = 400 }: MultiLineChartProps) {
             content={({ active, payload, label }) => {
               if (active && payload && payload.length) {
                 const year = label
-                const selectedCurrency = currency || data.metadata.currency || 'USD'
-                const isINR = selectedCurrency === 'INR'
-                const currencySymbol = isINR ? '₹' : '$'
-                const unitText = isINR ? '' : (data.metadata.value_unit || 'Million')
-                
+                const selCurrency = (currency as 'USD' | 'EUR') || 'USD'
+                const isEURLocal = selCurrency === 'EUR'
+                const unitText = data.metadata.value_unit || 'Million'
+
                 const unit = filters.dataType === 'value'
-                  ? isINR 
-                    ? currencySymbol
-                    : `${selectedCurrency} ${unitText}`
+                  ? `${isEURLocal ? 'EUR' : 'USD'} ${unitText}`
                   : data.metadata.volume_unit
                 
                 return (

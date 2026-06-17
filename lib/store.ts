@@ -25,7 +25,7 @@ interface DashboardStore {
   proposition3Data: { headers: string[]; rows: Record<string, any>[] } | null // Store Proposition 3 data
   competitiveIntelligenceData: { headers: string[]; rows: Record<string, any>[] } | null // Store competitive intelligence CSV data
   dashboardName: string | null // Custom dashboard name
-  currency: 'USD' | 'INR' // Currency preference
+  currency: 'USD' | 'EUR' // Currency preference
   
   // Actions
   setData: (data: ComparisonData) => void
@@ -52,7 +52,7 @@ interface DashboardStore {
   setProposition3Data: (data: { headers: string[]; rows: Record<string, any>[] } | null) => void
   setCompetitiveIntelligenceData: (data: { headers: string[]; rows: Record<string, any>[] } | null) => void
   setDashboardName: (name: string | null) => void
-  setCurrency: (currency: 'USD' | 'INR') => void
+  setCurrency: (currency: 'USD' | 'EUR') => void
 }
 
 // Helper function to check if data has B2B/B2C segmentation
@@ -413,7 +413,7 @@ export const useDashboardStore = create<DashboardStore>((set, get) => ({
   
   setDashboardName: (name) => set({ dashboardName: name }),
   
-  setCurrency: (currency) => set({ currency }),
+  setCurrency: (currency: 'USD' | 'EUR') => set({ currency }),
   
   setLoading: (loading) => set({ isLoading: loading }),
   

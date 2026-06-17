@@ -9,11 +9,7 @@ import { AggregationLevelSelector } from './AggregationLevelSelector'
 import { RotateCcw } from 'lucide-react'
 
 export function FilterPanel() {
-  const { filters, updateFilters, resetFilters } = useDashboardStore()
-
-  const handleDataTypeChange = (dataType: 'value' | 'volume') => {
-    updateFilters({ dataType })
-  }
+  const { filters, updateFilters, resetFilters, currency, setCurrency } = useDashboardStore()
 
   const handleViewModeChange = (viewMode: 'segment-mode' | 'geography-mode' | 'matrix') => {
     updateFilters({ viewMode })
@@ -34,31 +30,31 @@ export function FilterPanel() {
         </button>
       </div>
 
-      {/* Data Type Toggle */}
+      {/* Currency Toggle */}
       <div>
         <label className="block text-sm font-medium text-black mb-2">
-          Data Type
+          Currency
         </label>
         <div className="grid grid-cols-2 gap-2">
           <button
-            onClick={() => handleDataTypeChange('value')}
+            onClick={() => setCurrency('USD')}
             className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-              filters.dataType === 'value'
+              currency === 'USD'
                 ? 'bg-blue-600 text-white'
                 : 'bg-gray-100 text-black hover:bg-gray-200'
             }`}
           >
-            Value
+            USD
           </button>
           <button
-            onClick={() => handleDataTypeChange('volume')}
+            onClick={() => setCurrency('EUR')}
             className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-              filters.dataType === 'volume'
+              currency === 'EUR'
                 ? 'bg-blue-600 text-white'
                 : 'bg-gray-100 text-black hover:bg-gray-200'
             }`}
           >
-            Volume
+            Euro
           </button>
         </div>
       </div>

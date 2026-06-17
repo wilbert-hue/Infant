@@ -14,6 +14,7 @@ import {
 import { CHART_THEME, getChartColor, CHART_COLORS } from '@/lib/chart-theme'
 import { filterData, prepareGroupedBarData, prepareIntelligentMultiLevelData, getUniqueGeographies, getUniqueSegments, getGeographyProportions } from '@/lib/data-processor'
 import { useDashboardStore } from '@/lib/store'
+import { EUR_RATE } from '@/lib/utils'
 import type { DataRecord } from '@/lib/types'
 
 interface GroupedBarChartProps {
@@ -293,8 +294,20 @@ export function GroupedBarChart({ title, height = 400 }: GroupedBarChartProps) {
       })
     }
 
-    return { data: prepared, series, stackedSeries, isStacked }
-  }, [data, filters])
+    // Apply EUR conversion to chart data values
+    const conversionFactor = currency === 'EUR' ? EUR_RATE : 1.0
+    const convertedData = conversionFactor !== 1.0
+      ? prepared.map(dp => {
+          const converted: any = { year: dp.year }
+          Object.keys(dp).forEach(k => {
+            if (k !== 'year') converted[k] = (dp[k] as number) * conversionFactor
+          })
+          return converted
+        })
+      : prepared
+
+    return { data: convertedData, series, stackedSeries, isStacked }
+  }, [data, filters, currency])
 
   if (!data || chartData.data.length === 0) {
     return (
@@ -309,15 +322,13 @@ export function GroupedBarChart({ title, height = 400 }: GroupedBarChartProps) {
     )
   }
 
-  const selectedCurrency = currency || data.metadata.currency || 'USD'
-  const isINR = selectedCurrency === 'INR'
-  const currencySymbol = isINR ? '₹' : '$'
-  const unitLabel = isINR ? '' : (data.metadata.value_unit || 'Million')
-  
+  const selectedCurrency = (currency as 'USD' | 'EUR') || 'USD'
+  const isEUR = selectedCurrency === 'EUR'
+  const currencyCode = isEUR ? 'EUR' : 'USD'
+  const unitLabel = data.metadata.value_unit || 'Million'
+
   const yAxisLabel = filters.dataType === 'value'
-    ? isINR 
-      ? `Market Value (${currencySymbol})`
-      : `Market Value (${selectedCurrency} ${unitLabel})`
+    ? `Market Value (${currencyCode} ${unitLabel})`
     : `Market Volume (${data.metadata.volume_unit})`
 
   // Matrix view should use heatmap instead
@@ -342,15 +353,12 @@ export function GroupedBarChart({ title, height = 400 }: GroupedBarChartProps) {
     if (!active || !payload || !payload.length) return null
 
     const year = label
-    const selectedCurrency = currency || data.metadata.currency || 'USD'
-    const isINR = selectedCurrency === 'INR'
-    const currencySymbol = isINR ? '₹' : '$'
-    const unitText = isINR ? '' : (data.metadata.value_unit || 'Million')
-    
+    const selCurrency = (currency as 'USD' | 'EUR') || 'USD'
+    const isEURLocal = selCurrency === 'EUR'
+    const unitText = data.metadata.value_unit || 'Million'
+
     const unit = filters.dataType === 'value'
-      ? isINR 
-        ? currencySymbol
-        : `${selectedCurrency} ${unitText}`
+      ? `${isEURLocal ? 'EUR' : 'USD'} ${unitText}`
       : data.metadata.volume_unit
 
     if (chartData.isStacked) {

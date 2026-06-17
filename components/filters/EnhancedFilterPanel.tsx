@@ -16,7 +16,7 @@ interface SelectedSegmentItem {
 }
 
 export function EnhancedFilterPanel() {
-  const { data, filters, updateFilters } = useDashboardStore()
+  const { data, filters, updateFilters, currency, setCurrency } = useDashboardStore()
   const [selectedSegmentType, setSelectedSegmentType] = useState<string>(
     filters.segmentType || (data?.dimensions?.segments ? Object.keys(data.dimensions.segments)[0] : 'By Technology')
   )
@@ -261,31 +261,31 @@ export function EnhancedFilterPanel() {
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-2.5 space-y-2">
-      {/* Data Type Selection */}
+      {/* Currency Selection */}
       <div>
         <label className="text-xs font-medium text-black uppercase">
-          Data Type
+          Currency
         </label>
         <div className="flex gap-1 mt-1">
           <button
-            onClick={() => updateFilters({ dataType: 'value' })}
+            onClick={() => setCurrency('USD')}
             className={`flex-1 px-3 py-1.5 text-sm rounded ${
-              filters.dataType === 'value'
+              currency === 'USD'
                 ? 'bg-blue-600 text-white'
                 : 'bg-gray-100 text-black hover:bg-gray-200'
             }`}
           >
-            Value
+            USD
           </button>
           <button
-            onClick={() => updateFilters({ dataType: 'volume' })}
+            onClick={() => setCurrency('EUR')}
             className={`flex-1 px-3 py-1.5 text-sm rounded ${
-              filters.dataType === 'volume'
+              currency === 'EUR'
                 ? 'bg-blue-600 text-white'
                 : 'bg-gray-100 text-black hover:bg-gray-200'
             }`}
           >
-            Volume
+            Euro
           </button>
         </div>
       </div>
